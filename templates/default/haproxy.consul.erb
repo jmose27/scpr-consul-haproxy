@@ -23,6 +23,7 @@ defaults
 {{with $config := key "<%= @config_key %>" | parseJSON}}
 frontend http-in
   bind *:80
+  redirect scheme https if { hdr(Host) -i www.scpr.org } !{ ssl_fc }
   <% if node.ssl %>
   bind *:443 ssl <%= node.ssl.databag_items.map{|cert_name| "crt #{node.ssl.path}/#{cert_name}.pem"}.join(" ") %>
   <% end %>
